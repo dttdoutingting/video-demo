@@ -1,0 +1,13 @@
+.video-demo-container ul li {
+  list-style-type: none;
+}
+
+.ul-container {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+}
+
+.ul-container .li-wrapper {
+  padding-right: 20px;
+}
