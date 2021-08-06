@@ -1,5 +1,5 @@
-import { isSupported, createPlayer } from 'flv.js'
 import { useEffect, useRef, useState } from 'react'
+import flvjs from 'flv.js'
 
 function VideoElement({ url }) {
   const videoRef = useRef(null)
@@ -7,11 +7,11 @@ function VideoElement({ url }) {
 
   useEffect(() => {
     let flvPlayer
-    if (isSupported() && refVisible && url) {
+    if (flvjs.isSupported() && refVisible && url) {
       const videoElement = videoRef.current
       // console.log('createPlayer', createPlayer)
 
-      flvPlayer = createPlayer(
+      flvPlayer = flvjs.createPlayer(
         {
           type: 'flv',
           url,
