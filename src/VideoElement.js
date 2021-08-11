@@ -7,9 +7,9 @@ function VideoElement({ url }) {
 
   useEffect(() => {
     let flvPlayer
+
     if (flvjs.isSupported() && refVisible && url) {
       const videoElement = videoRef.current
-      // console.log('createPlayer', createPlayer)
 
       flvPlayer = flvjs.createPlayer(
         {
@@ -20,7 +20,7 @@ function VideoElement({ url }) {
         },
         {
           enableWorker: true,
-          enableStashBuffer: false,
+          // enableSstashBuffer: false,
           stashInitialSize: 128,
         }
       )
@@ -43,7 +43,8 @@ function VideoElement({ url }) {
         setRefVisible(true)
       }}
       muted
-      width="500px"
+      width={500}
+      controls
     ></video>
   )
 }

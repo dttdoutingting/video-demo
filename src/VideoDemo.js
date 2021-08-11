@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import VideoElement from './VideoElement'
+import VideoElemengtHLS from './VideoElementHLS'
 import './videodemo.css'
 
 function getNowTime() {
@@ -32,24 +33,16 @@ function VideoDemo() {
     <div className="video-demo-container">
       <div>当前时间：{currentTime}</div>
       <ul className="ul-container">
-        <li className="li-wrapper">
-          <VideoElement url={`http://allapis.cn/live?port=1935&app=testapp&stream=teststream1`} />
-        </li>
-        {/* <li className="li-wrapper">
-          <VideoElement url="http://1011.hlsplay.aodianyun.com/demo/game.flv" />
-        </li>
-        <li className="li-wrapper">
-          <VideoElement url="http://1011.hlsplay.aodianyun.com/demo/game.flv" />
-        </li>
-        <li className="li-wrapper">
-          <VideoElement url="http://1011.hlsplay.aodianyun.com/demo/game.flv" />
-        </li>
-        <li className="li-wrapper">
-          <VideoElement url="http://1011.hlsplay.aodianyun.com/demo/game.flv" />
-        </li>
-        <li className="li-wrapper">
-          <VideoElement url="http://1011.hlsplay.aodianyun.com/demo/game.flv" />
-        </li> */}
+        {[1, 2, 3, 4, 5, 6].map((item) => (
+          <li className="li-wrapper" key={item}>
+            <div>FLV</div>
+            <VideoElement url={`http://allapis.cn/live?port=1935&app=testapp&stream=teststream`} />
+          </li>
+          // <li className="li-wrapper" key={item}>
+          //   <div>HLS</div>
+          //   <VideoElemengtHLS url={`http://113.31.163.86:8080/hls/myapp_mystream.m3u8`} />
+          // </li>
+        ))}
       </ul>
     </div>
   )
