@@ -46,11 +46,8 @@ function VideoElement({ url }) {
 
               //多个视频用
               clearInterval(timerId.current)
-              flvPlayerRef.current.pause()
-              flvPlayerRef.current.unload()
-              flvPlayerRef.current.detachMediaElement()
-              flvPlayerRef.current.destroy()
-              flvPlayerRef.current = null
+              // 关闭视频流
+              closeVideo()
               //重新加载当前停止的视频流，根据个人的方法来配置
               createVideo()
 
@@ -66,14 +63,7 @@ function VideoElement({ url }) {
           //视频出错后销毁重新创建
           console.log('断流重连================')
 
-          if (flvPlayerRef.current) {
-            flvPlayerRef.current.pause()
-            flvPlayerRef.current.unload()
-            flvPlayerRef.current.detachMediaElement()
-            flvPlayerRef.current.destroy()
-            flvPlayerRef.current = null
-            createVideo()
-          }
+          closeVideo()
         })
 
         //画面卡死
@@ -85,22 +75,26 @@ function VideoElement({ url }) {
           if (lastDecodedFrame.current !== res.decodedFrames || res.decodedFrames - lastDecodedFrame.current <= 10) {
             lastDecodedFrame.current = res.decodedFrames
           } else {
-            console.log('画面卡斯==============')
+            console.log('画面卡顿==============')
 
             lastDecodedFrame.current = 0
-            if (flvPlayerRef.current) {
-              flvPlayerRef.current.pause()
-              flvPlayerRef.current.unload()
-              flvPlayerRef.current.detachMediaElement()
-              flvPlayerRef.current.destroy()
-              flvPlayerRef.current = null
-              createVideo()
-            }
+
+            closeVideo()
           }
         })
       }
     }
 
+    function closeVideo() {
+      if (flvPlayerRef.current) {
+        flvPlayerRef.current.pause()
+        flvPlayerRef.current.unload()
+        flvPlayerRef.current.detachMediaElement()
+        flvPlayerRef.current.destroy()
+        flvPlayerRef.current = null
+        createVideo()
+      }
+    }
     createVideo()
 
     return () => {
