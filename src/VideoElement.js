@@ -5,6 +5,9 @@ function VideoElement({ url }) {
   const videoRef = useRef(null)
   const [refVisible, setRefVisible] = useState(false)
   const flvPlayerRef = useRef(null)
+  const lastDecodedFrame = useRef(0)
+
+  const timerId = useRef(null)
 
   useEffect(() => {
     function createVideo() {
@@ -29,19 +32,20 @@ function VideoElement({ url }) {
         flvPlayerRef.current.load()
         flvPlayerRef.current.play()
 
-        let timer = setInterval(() => {
+        //视频流延迟
+        timerId.current = setInterval(() => {
           // ->注意：这里的定时器，在中断视频时，要清理哦
           if (flvPlayerRef.current.buffered && flvPlayerRef.current.buffered.length) {
             let end = flvPlayerRef.current.buffered.end(0) //获取当前buffered值
             let diff = end - flvPlayerRef.current.currentTime //获取buffered与currentTime的差值
-            if (diff >= 60) {
+            if (diff >= 20) {
               //如果差值大于等于60s 手动跳帧 这里可根据自身需求来定
               //单个视频用
               // flvPlayer.currentTime = end;//手动跳帧
               // flvPlayer.currentTime = flvPlayer.buffered.end(0);//手动跳帧
 
               //多个视频用
-              clearInterval(timer)
+              clearInterval(timerId.current)
               flvPlayerRef.current.pause()
               flvPlayerRef.current.unload()
               flvPlayerRef.current.detachMediaElement()
@@ -49,15 +53,18 @@ function VideoElement({ url }) {
               flvPlayerRef.current = null
               //重新加载当前停止的视频流，根据个人的方法来配置
               createVideo()
+
+              console.log('视频流延迟==========')
             }
           }
         }, 2000) //2000毫秒执行一次
 
+        //断流重连
         flvPlayerRef.current.on(flvjs.Events.ERROR, (errorType, errorDetail, errorInfo) => {
           // this.loadStatus=true
           // this.statusMsg="正在重连。。。"
           //视频出错后销毁重新创建
-          console.log('error================')
+          console.log('断流重连================')
 
           if (flvPlayerRef.current) {
             flvPlayerRef.current.pause()
@@ -68,12 +75,38 @@ function VideoElement({ url }) {
             createVideo()
           }
         })
+
+        //画面卡死
+        flvPlayerRef.current.on('statistics_info', function (res) {
+          if (lastDecodedFrame.current === 0) {
+            lastDecodedFrame.current = res.decodedFrames
+            return
+          }
+          if (lastDecodedFrame.current !== res.decodedFrames || res.decodedFrames - lastDecodedFrame.current <= 10) {
+            lastDecodedFrame.current = res.decodedFrames
+          } else {
+            console.log('画面卡斯==============')
+
+            lastDecodedFrame.current = 0
+            if (flvPlayerRef.current) {
+              flvPlayerRef.current.pause()
+              flvPlayerRef.current.unload()
+              flvPlayerRef.current.detachMediaElement()
+              flvPlayerRef.current.destroy()
+              flvPlayerRef.current = null
+              createVideo()
+            }
+          }
+        })
       }
     }
 
     createVideo()
 
     return () => {
+      if (timerId.current) {
+        clearInterval(timerId.current)
+      }
       if (flvPlayerRef.current && flvPlayerRef.current.destroy) {
         flvPlayerRef.current.destroy()
       }

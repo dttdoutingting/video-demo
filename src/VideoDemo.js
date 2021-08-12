@@ -22,7 +22,7 @@ function VideoDemo() {
   useEffect(() => {
     const internalId = setInterval(() => {
       setCurrentTime(getNowTime())
-    }, 100)
+    }, 500)
 
     return () => {
       clearInterval(internalId)
@@ -36,11 +36,11 @@ function VideoDemo() {
         {[1, 2, 3, 4, 5, 6].map((item) => (
           <li className="li-wrapper" key={item}>
             <div>FLV</div>
-            <VideoElement url={`http://allapis.cn/live?port=1935&app=testapp&stream=teststream`} />
+            <VideoElement url={`http://113.31.163.86:8080/live?app=myapp&stream=mystream`} />
           </li>
           // <li className="li-wrapper" key={item}>
           //   <div>HLS</div>
-          //   <VideoElemengtHLS url={`http://113.31.163.86:8080/hls/myapp_mystream.m3u8`} />
+          //   <VideoElemengtHLS url={`http://113.31.163.86:8080/hls/mystream.m3u8`} />
           // </li>
         ))}
       </ul>

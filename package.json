@@ -94,7 +94,7 @@
       "last 1 safari version"
     ]
   },
-  "proxy": "http://allapis.cn/live",
+  "proxy": "http://113.31.163.86:8080",
   "jest": {
     "roots": [
       "<rootDir>/src"
