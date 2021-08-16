@@ -19,13 +19,8 @@ function VideoElement({ url }) {
             type: 'flv',
             url,
             hasAudio: false,
-            isLive: true,
           },
-          {
-            enableWorker: true,
-            // enableSstashBuffer: false,
-            stashInitialSize: 128,
-          }
+          { isLive: true, enableWorker: true, enableStashBuffer: false, stashInitialSize: 128 }
         )
 
         flvPlayerRef.current.attachMediaElement(videoElement)
@@ -38,7 +33,7 @@ function VideoElement({ url }) {
           if (flvPlayerRef.current.buffered && flvPlayerRef.current.buffered.length) {
             let end = flvPlayerRef.current.buffered.end(0) //获取当前buffered值
             let diff = end - flvPlayerRef.current.currentTime //获取buffered与currentTime的差值
-            if (diff >= 20) {
+            if (diff >= 6) {
               //如果差值大于等于60s 手动跳帧 这里可根据自身需求来定
               //单个视频用
               // flvPlayer.currentTime = end;//手动跳帧
@@ -66,7 +61,7 @@ function VideoElement({ url }) {
           closeVideo()
         })
 
-        //画面卡死
+        //画面卡顿
         flvPlayerRef.current.on('statistics_info', function (res) {
           if (lastDecodedFrame.current === 0) {
             lastDecodedFrame.current = res.decodedFrames
@@ -101,9 +96,7 @@ function VideoElement({ url }) {
       if (timerId.current) {
         clearInterval(timerId.current)
       }
-      if (flvPlayerRef.current && flvPlayerRef.current.destroy) {
-        flvPlayerRef.current.destroy()
-      }
+      closeVideo()
     }
   }, [url, refVisible])
   return (

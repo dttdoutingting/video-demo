@@ -33,16 +33,28 @@ function VideoDemo() {
     <div className="video-demo-container">
       <div>当前时间：{currentTime}</div>
       <ul className="ul-container">
-        {[1, 2, 3, 4, 5, 6].map((item) => (
-          <li className="li-wrapper" key={item}>
-            <div>FLV</div>
-            <VideoElement url={`http://113.31.163.86:8080/live?app=myapp&stream=mystream`} />
-          </li>
-          // <li className="li-wrapper" key={item}>
-          //   <div>HLS</div>
-          //   <VideoElemengtHLS url={`http://113.31.163.86:8080/hls/mystream.m3u8`} />
-          // </li>
-        ))}
+        <li className="li-wrapper">
+          <VideoElement url={`http://113.31.163.86:8080/live?app=myapp&stream=mystream`} />
+        </li>
+        <li className="li-wrapper">
+          <VideoElement url={`http://113.31.163.86:8080/live?app=myapp&stream=hrj2`} />
+        </li>
+        <li className="li-wrapper">
+          <VideoElement url={`http://113.31.163.86:8080/live?app=myapp&stream=hrj3`} />
+        </li>
+        <li className="li-wrapper">
+          <VideoElement url={`http://113.31.163.86:8080/live?app=myapp&stream=hrj4`} />
+        </li>
+        <li className="li-wrapper">
+          <VideoElement url={`http://113.31.163.86:8080/live?app=myapp&stream=hrj5`} />
+        </li>
+        <li className="li-wrapper">
+          <VideoElement url={`http://113.31.163.86:8080/live?app=myapp&stream=hrj6`} />
+        </li>
+        {/* <li className="li-wrapper">
+          <div>HLS</div>
+          <VideoElemengtHLS url={`http://113.31.163.86:8080/hls/mystream.m3u8`} />
+        </li> */}
       </ul>
     </div>
   )
