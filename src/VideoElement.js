@@ -6,6 +6,7 @@ function VideoElement({ url }) {
   const [refVisible, setRefVisible] = useState(false)
   const flvPlayerRef = useRef(null)
   const lastDecodedFrame = useRef(0)
+  const bufferTimer = useRef(null)
 
   const timerId = useRef(null)
 
@@ -19,21 +20,27 @@ function VideoElement({ url }) {
             type: 'flv',
             url,
             hasAudio: false,
+            isLive: true,
           },
-          { isLive: true, enableWorker: true, enableStashBuffer: false, stashInitialSize: 128 }
+          {
+            isLive: true,
+            enableWorker: true,
+            enableStashBuffer: false,
+            stashInitialSize: 128,
+          }
         )
 
         flvPlayerRef.current.attachMediaElement(videoElement)
         flvPlayerRef.current.load()
         flvPlayerRef.current.play()
 
-        //视频流延迟
+        // //视频流延迟
         timerId.current = setInterval(() => {
           // ->注意：这里的定时器，在中断视频时，要清理哦
           if (flvPlayerRef.current.buffered && flvPlayerRef.current.buffered.length) {
             let end = flvPlayerRef.current.buffered.end(0) //获取当前buffered值
             let diff = end - flvPlayerRef.current.currentTime //获取buffered与currentTime的差值
-            if (diff >= 6) {
+            if (diff >= 3) {
               //如果差值大于等于60s 手动跳帧 这里可根据自身需求来定
               //单个视频用
               // flvPlayer.currentTime = end;//手动跳帧
@@ -77,6 +84,19 @@ function VideoElement({ url }) {
             closeVideo()
           }
         })
+        // 解决 video 缓存的问题
+        bufferTimer.current = setInterval(() => {
+          if (!videoElement.buffered.length) {
+            return
+          }
+
+          let end = videoElement.buffered.end(0)
+          let diff = end - videoElement.currentTime
+          if (diff >= 1) {
+            console.log('video 缓存超过 1 秒')
+            videoElement.currentTime = end
+          }
+        }, 500)
       }
     }
 
@@ -96,6 +116,9 @@ function VideoElement({ url }) {
       if (timerId.current) {
         clearInterval(timerId.current)
       }
+      if (bufferTimer.current) {
+        clearInterval(bufferTimer.current)
+      }
       closeVideo()
     }
   }, [url, refVisible])
@@ -107,7 +130,7 @@ function VideoElement({ url }) {
       }}
       muted
       width={500}
-      controls
+      autoplay
     ></video>
   )
 }

@@ -11,8 +11,8 @@ function getNowTime() {
   const hour = date.getHours() < 10 ? '0' + date.getHours() : date.getHours()
   const minute = date.getMinutes() < 10 ? '0' + date.getMinutes() : date.getMinutes()
   const second = date.getSeconds() < 10 ? '0' + date.getSeconds() : date.getSeconds()
-  const milliSeconds = date.getMilliseconds()
-  const currentTime = year + '-' + month + '-' + day + ' ' + hour + ':' + minute + ':' + second + '.' + milliSeconds
+  // const milliSeconds = date.getMilliseconds()
+  const currentTime = year + '-' + month + '-' + day + ' ' + hour + ':' + minute + ':' + second
   return currentTime
 }
 
@@ -22,7 +22,7 @@ function VideoDemo() {
   useEffect(() => {
     const internalId = setInterval(() => {
       setCurrentTime(getNowTime())
-    }, 500)
+    }, 1000)
 
     return () => {
       clearInterval(internalId)
@@ -33,13 +33,13 @@ function VideoDemo() {
     <div className="video-demo-container">
       <div>当前时间：{currentTime}</div>
       <ul className="ul-container">
-        <li className="li-wrapper">
+        {/* <li className="li-wrapper">
           <VideoElement url={`http://113.31.163.86:8080/live?app=myapp&stream=mystream`} />
-        </li>
+        </li> */}
         <li className="li-wrapper">
           <VideoElement url={`http://113.31.163.86:8080/live?app=myapp&stream=hrj2`} />
         </li>
-        <li className="li-wrapper">
+        {/* <li className="li-wrapper">
           <VideoElement url={`http://113.31.163.86:8080/live?app=myapp&stream=hrj3`} />
         </li>
         <li className="li-wrapper">
@@ -50,7 +50,7 @@ function VideoDemo() {
         </li>
         <li className="li-wrapper">
           <VideoElement url={`http://113.31.163.86:8080/live?app=myapp&stream=hrj6`} />
-        </li>
+        </li> */}
         {/* <li className="li-wrapper">
           <div>HLS</div>
           <VideoElemengtHLS url={`http://113.31.163.86:8080/hls/mystream.m3u8`} />
